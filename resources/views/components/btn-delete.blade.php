@@ -1,7 +1,7 @@
-@props(['video'])
+@props(['item', 'routeItem'])
 <div class="">
 		<form
-				action="{{ route('videos.destroy', $video->id) }}"
+				action="{{ route($routeItem, $item->id) }}"
 				method="POST"
 				onsubmit="return confirm('Are you sure you want to delete this video ?')"
 		>

@@ -46,7 +46,7 @@ class VideoController extends Controller
     ]);
 
     $validateImg = $request->file('url_img')->store('cover');
-
+    // save to DB
     Video::create([
       'title' => $request->title,
       'description' => $request->description,

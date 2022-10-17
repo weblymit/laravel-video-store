@@ -7,6 +7,12 @@
 						src="{{ asset('storage/' . $video->url_img) }}"
 				>
 				<div class="pt-5">
+						@forelse ($video->list_actors as $actor)
+								<p>{{ $actor->name }}</p>
+						@empty
+								<p>pas d'acteur pour ce film</p>
+						@endforelse
+
 						<p>{{ $video->nationality }}</p>
 						<p class="text-blue-500">Acteur : {{ $video->actor }}</p>
 						<p class="text-blue-500">Date de création : {{ $video->year_created }}</p>
@@ -18,7 +24,10 @@
 										class="rounded-lg bg-green-600 p-2 text-white"
 										href="{{ route('videos.edit', $video->id) }}"
 								>Modifier</a>
-								<x-btn-delete :video="$video" />
+								<x-btn-delete
+										:item="$video"
+										routeItem="videos.destroy"
+								/>
 						</div>
 				@endauth
 		</div>
