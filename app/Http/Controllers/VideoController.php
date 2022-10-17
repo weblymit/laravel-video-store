@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class VideoController extends Controller
 {
@@ -14,7 +16,7 @@ class VideoController extends Controller
    */
   public function index()
   {
-    $videos = Video::paginate(10);
+    $videos = Video::orderBy('updated_at', 'DESC')->paginate(10);
     return view('pages.home', compact('videos'));
   }
 
@@ -77,9 +79,9 @@ class VideoController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function edit($id)
+  public function edit(Video $video)
   {
-    //
+    return view('pages.edit', compact('video'));
   }
 
   /**
@@ -89,9 +91,36 @@ class VideoController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, $id)
+  public function update(Request $request, Video $video)
   {
-    //
+    //1-validate form
+    $request->validate([
+      'title' => 'required|max:255',
+      'description' => 'required|max:1000',
+      'url_img' => 'required|sometimes|max:2000|mimes:png,jpg|image',
+    ]);
+
+    // 2-if image
+    if ($request->hasFile('url_img')) {
+      // delete the images
+      Storage::delete($video->url_img);
+      // store new image in storage
+      $video->url_img = $request->file('url_img')->store('cover');
+    }
+
+    // 3-upadte and store to DB
+    $video->update([
+      'title' => $request->title,
+      'description' => $request->description,
+      'url_img' => $video->url_img,
+      'actor' => $request->actor,
+      'nationality' => $request->nationality,
+      'year_created' => $request->year_created,
+      'created_at' => now()
+    ]);
+
+    // 4-redirec
+    return redirect()->route('videos.show', $video->id)->with('status', 'update ok');
   }
 
   /**

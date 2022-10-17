@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VideoController;
 
 Route::get('/', [VideoController::class, 'index'])->name('home');
 Route::resource('videos', VideoController::class);
+Route::resource('categories', CategoryController::class);
 
 
 Route::get('/dashboard', function () {

@@ -2,7 +2,7 @@
 <div class="shadow-lg">
 		<img
 				alt=""
-				src="{{ $url_img }}"
+				src="{{ asset('storage/' . $url_img) }}"
 		>
 		<div class="p-4">
 				<p class="pb-3 text-lg font-black">{{ $title }}</p>
